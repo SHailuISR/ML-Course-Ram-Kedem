@@ -91,3 +91,17 @@ def show_distribution(df,col):
 
   #main title:
   fig.suptitle(col.capitalize() +' distribution', fontsize=20,fontweight="bold")
+
+def calc_anova(df, group_column, values_column):
+    # Get list of unique group values in provided column
+    unique_group_values = df[group_column].drop_duplicates().to_list()
+
+    # Iterate through each unique group value and filter the dataframe to get the values
+    # of the provided column for that group, then store them in a list
+    values_by_group = []
+    for group_value in unique_group_values:
+        group_filter = df[group_column] == group_value
+        values_by_group.append(df[values_column][group_filter])
+
+    # Perform ANOVA test on the list of value arrays using the `f_oneway` function from the `scipy.stats` module
+    return f_oneway(*values_by_group)
